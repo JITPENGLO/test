@@ -5,10 +5,11 @@
  */
 package test;
 
-import java.util.ArrayList;
+import adt.LList;
+import adt.ListInterface;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import test.orderList;
+import entity.SalesOrder;
 
 /**
  *
@@ -16,6 +17,8 @@ import test.orderList;
  */
 public class AddSalesOrder extends javax.swing.JFrame {
 
+    public ListInterface<SalesOrder> list = new LList<>();
+    
     /**
      * Creates new form StaffDeleteProduct
      */
@@ -24,70 +27,37 @@ public class AddSalesOrder extends javax.swing.JFrame {
         StoreTable();
     }
 
-public ArrayList OrderListt(){
-    ArrayList<orderList> list = new ArrayList<orderList>();
+public ListInterface OrderList(){
+    //ListInterface<SalesOrder> list = new LList<>();
     
     /*for(int i=0; i<list.size(); i++){
         list.add();
         list.add(p2);
         list.add(p3);
     }*/
-    
-    orderList nlist = new orderList(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText())); 
-    //orderList nlist = new orderList("OR0001", "Hello", "03/03/2018", "24:00", 3, 20.00);
+    // dont use this on testing , because get from text, which consider null.
+    SalesOrder nlist = new SalesOrder(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText())); 
+   
     list.add(nlist);
     return list;
 }
 public void StoreTable(){
        DefaultTableModel model = (DefaultTableModel) jtbProduct.getModel();
-       ArrayList<orderList> list = new ArrayList<orderList>();
+       //ListInterface<SalesOrder> list = new LList<>();
        Object rowData[] = new Object[6];
        
-       for(int i =0;i< list.size();i++){
-           rowData[0] = list.get(i).id;
-           rowData[1] = list.get(i).desc;
-           rowData[2] = list.get(i).date;
-           rowData[3] = list.get(i).time;
-           rowData[4] = list.get(i).quantity;
-           rowData[5] = list.get(i).price;
+       for(int i =0;i< list.getNumberOfEntries();i++){
+           rowData[0] = list.getEntry(i+1).getId();
+           rowData[1] = list.getEntry(i+1).getDesc();
+           rowData[2] = list.getEntry(i+1).getDate();
+           rowData[3] = list.getEntry(i+1).getTime();
+           rowData[4] = list.getEntry(i+1).getQuantity();
+           rowData[5] = list.getEntry(i+1).getPrice();
            
            model.addRow(rowData);
     }
 }
-public void addOrder(){
-    DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
-        ArrayList<orderList> list = new ArrayList();
-        
-        int yesno = JOptionPane.showConfirmDialog(null, "Do you want to add the sales order?", "ARE YOU SURE???", JOptionPane.YES_NO_OPTION);
-        if(yesno == JOptionPane.YES_OPTION){
-            orderList nlist = new orderList(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText())); 
-            list.add(nlist);
-            
-            Object rowData[] = new Object[6];
-            rowData[0] = jtfID.getText();
-            rowData[1] = jtaDesc.getText();
-            rowData[2] = jtfDate.getText();
-            rowData[3] = jtfTime.getText();
-            rowData[4] = Integer.parseInt(jtfQuan.getText());
-            rowData[5] = Double.parseDouble(jtfPrice.getText());
-            model.addRow(rowData);
-            JOptionPane.showMessageDialog(null,"Product Add successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
-        }
-}
 
-public void editOrder(){
-    DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
-        ArrayList<orderList> list = new ArrayList();
-        
-        for(int i = 0;i < model.getRowCount();i++){
-            orderList oList = new orderList(model.getValueAt(i, 0).toString(),model.getValueAt(i,1).toString(),model.getValueAt(i, 2).toString(),
-                    model.getValueAt(i, 3).toString(),Integer.parseInt(model.getValueAt(i, 4).toString()),Double.parseDouble(model.getValueAt(i, 5).toString()));
-            
-            list.add(oList);
-        }
-        
-        new EditSalesOrder(list).setVisible(true);
-}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -373,83 +343,51 @@ public void editOrder(){
     }//GEN-LAST:event_jtfQuanActionPerformed
 
     private void jbtDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtDeleteActionPerformed
-        addOrder();
-        /*DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
-        ArrayList<orderList> list = new ArrayList();
+        // addOrder();
+        DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
+        //ListInterface<SalesOrder> list = new LList();
         
         int yesno = JOptionPane.showConfirmDialog(null, "Do you want to add the sales order?", "ARE YOU SURE???", JOptionPane.YES_NO_OPTION);
         if(yesno == JOptionPane.YES_OPTION){
-            orderList nlist = new orderList(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText())); 
+            SalesOrder nlist = new SalesOrder(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText())); 
             list.add(nlist);
             
             Object rowData[] = new Object[6];
-            rowData[0] = jtfID.getText();
-            rowData[1] = jtaDesc.getText();
-            rowData[2] = jtfDate.getText();
-            rowData[3] = jtfTime.getText();
-            rowData[4] = Integer.parseInt(jtfQuan.getText());
-            rowData[5] = Double.parseDouble(jtfPrice.getText());
+            for(int i=0; i<list.getNumberOfEntries(); i++){
+//            rowData[0] = jtfID.getText();
+//            rowData[1] = jtaDesc.getText();
+//            rowData[2] = jtfDate.getText();
+//            rowData[3] = jtfTime.getText();
+//            rowData[4] = Integer.parseInt(jtfQuan.getText());
+//            rowData[5] = Double.parseDouble(jtfPrice.getText());
+                rowData[0] = list.getEntry(i+1).getId();
+                rowData[1] = list.getEntry(i+1).getDesc();
+                rowData[2] = list.getEntry(i+1).getDate();
+                rowData[3] = list.getEntry(i+1).getTime();
+                rowData[4] = list.getEntry(i+1).getQuantity();
+                rowData[5] = list.getEntry(i+1).getPrice();
+            }
             model.addRow(rowData);
             JOptionPane.showMessageDialog(null,"Product Add successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
-        }*/
-        /*DefaultTableModel model = (DefaultTableModel) jtbProduct.getModel();
-        ArrayList<AddSalesOrder.Product> list = ProductList();
-        
-        int yes = JOptionPane.showConfirmDialog(null, "Do you want to delete the current product?", "Delete Product", JOptionPane.YES_NO_OPTION);
-        if(yes == JOptionPane.YES_OPTION){
-            for(int i =0;i< list.size();i++){
-                if(jtfID.getText().equals(list.get(i).id.toString())){
-            
-                    model.removeRow(i);
-                    jtfID.setText("");
-                    jtfProductName.setText("");
-                    jtfProductType.setText("");
-                    jtaDesc.setText("");
-                    jtfPrice.setText("");
-                    jtfQuan.setText("");
-                }
-            }
-        }else if(yes == JOptionPane.NO_OPTION){
-            jtfID.setText("");
-            jtfProductName.setText("");
-            jtfProductType.setText("");
-            jtaDesc.setText("");
-            jtfPrice.setText("");
-            jtfQuan.setText("");
-        }*/
-        
+        }
         
     }//GEN-LAST:event_jbtDeleteActionPerformed
 
     private void jbteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbteditActionPerformed
         // TODO add your handling code here:
-        editOrder();
-        
-        /*DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
-        ArrayList<orderList> list = new ArrayList();
+        // editOrder();
+        DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
+        //ListInterface<SalesOrder> list = new LList();
         
         for(int i = 0;i < model.getRowCount();i++){
-            orderList oList = new orderList(model.getValueAt(i, 0).toString(),model.getValueAt(i,1).toString(),model.getValueAt(i, 2).toString(),
+            SalesOrder oList = new SalesOrder(model.getValueAt(i, 0).toString(),model.getValueAt(i,1).toString(),model.getValueAt(i, 2).toString(),
                     model.getValueAt(i, 3).toString(),Integer.parseInt(model.getValueAt(i, 4).toString()),Double.parseDouble(model.getValueAt(i, 5).toString()));
             
             list.add(oList);
         }
         
-        new EditSalesOrder(list).setVisible(true);*/
-    }//GEN-LAST:event_jbteditActionPerformed
-
-    /*public int selectedIndex(){
-        ArrayList<AddSalesOrder.Product> Arraylist = ProductList();
-        int index = -1;
-        
-        for(int i=0;i<Arraylist.size();i++){
-            if(jtfID.getText().equals(Arraylist.get(i).id.toStr
-    ing())){
-                index = i;
-            }
-        }
-        return index;
-    }*/
+        new EditSalesOrder(list).setVisible(true);
+    }
     /**
      * @param args the command line arguments
      */

@@ -5,9 +5,12 @@
  */
 package test;
 
+import adt.LList;
+import adt.ListInterface;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import entity.SalesOrder;
 
 /**
  *
@@ -15,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class EditSalesOrder extends javax.swing.JFrame {
     
-    private ArrayList<orderList> list = new ArrayList<orderList>();
+    private ListInterface<SalesOrder> list = new LList<>();
     /**
      * Creates new form StaffDeleteProduct
      */
@@ -24,10 +27,9 @@ public class EditSalesOrder extends javax.swing.JFrame {
         StoreTable();
     }
 
-    public EditSalesOrder(ArrayList<orderList> getList){
+    public EditSalesOrder(ListInterface<SalesOrder> list){
+        this.list = list;
         initComponents();
-        list = getList;
-        //getID();
         StoreTable();
     }
     //why u do this to me TT
@@ -37,24 +39,24 @@ public class EditSalesOrder extends javax.swing.JFrame {
         }
     }*/
 
-public ArrayList OrderListt(){
-    ArrayList<orderList> list = new ArrayList<orderList>();
-    orderList ol = new orderList(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText()));
+public ListInterface OrderList(){
+    //ListInterface<SalesOrder> list = new LList<>();
+    SalesOrder ol = new SalesOrder(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText()));
     list.add(ol);
     return list;
 }
 public void StoreTable(){
        DefaultTableModel model = (DefaultTableModel) jtbProduct.getModel();
-       //ArrayList<orderList> list = new ArrayList<orderList>();
+       //ListInterface<SalesOrder> list = new LList<>();
        Object rowData[] = new Object[6];
        
-       for(int i =0;i< list.size();i++){
-           rowData[0] = list.get(i).id;
-           rowData[1] = list.get(i).desc;
-           rowData[2] = list.get(i).date;
-           rowData[3] = list.get(i).time;
-           rowData[4] = list.get(i).quantity;
-           rowData[5] = list.get(i).price;
+       for(int i =0;i< list.getNumberOfEntries();i++){
+           rowData[0] = list.getEntry(i+1).getId();
+           rowData[1] = list.getEntry(i+1).getDesc();
+           rowData[2] = list.getEntry(i+1).getDate();
+           rowData[3] = list.getEntry(i+1).getTime();
+           rowData[4] = list.getEntry(i+1).getQuantity();
+           rowData[5] = list.getEntry(i+1).getPrice();
            
            model.addRow(rowData);
     }
@@ -70,6 +72,7 @@ public void StoreTable(){
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblStaffID = new javax.swing.JLabel();
         lblProductID = new javax.swing.JLabel();
@@ -98,20 +101,31 @@ public void StoreTable(){
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Fiore Flowershop");
 
+        jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(239, 239, 239)
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addGap(148, 148, 148)
                 .addComponent(jLabel1)
-                .addContainerGap(340, Short.MAX_VALUE))
+                .addContainerGap(360, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(44, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -382,41 +396,13 @@ public void StoreTable(){
         jtfPrice.setEditable(true);
     }//GEN-LAST:event_jtbProductMouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        new AddSalesOrder().setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     
-    /*public void showDetail(){
-        //DefaultTableModel model = (DefaultTableModel) jtbProduct.getModel();
-        ArrayList<orderList> list = new ArrayList<>();
-        
-        //Object rowData[] = new Object[6];
-        
-        for(int i=0; i<list.size(); i++){
-            if(jcbID.getSelectedItem().toString().equals(list.get(i).id.toString())){
-                jtaDesc.setText(list.get(i).desc.toString());
-                jtaDesc.setEditable(true);
-                jtfDate.setText(list.get(i).date.toString());
-                jtfDate.setEditable(true);
-                jtfTime.setText(list.get(i).time.toString());
-                jtfTime.setEditable(true);
-                jtfQuan.setText(""+ list.get(i).quantity);
-                jtfQuan.setEditable(true);
-                jtfPrice.setText(""+ list.get(i).price);
-                jtfPrice.setEditable(true);
-                //model.addRow(rowData);
-            }
-        }
-    } */
-    
-    /*public int selectedIndex(){
-        ArrayList<EditSalesOrder.Product> Arraylist = ProductList();
-        int index = -1;
-        
-        for(int i=0;i<Arraylist.size();i++){
-            if(jcbID.getSelectedItem().toString().equals(Arraylist.get(i).id.toString())){
-                index = i;
-            }
-        }
-        return index;
-    }*/
+   
     /**
      * @param args the command line arguments
      */
@@ -485,6 +471,7 @@ public void StoreTable(){
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Image;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

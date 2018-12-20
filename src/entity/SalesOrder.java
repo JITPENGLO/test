@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test;
+package entity;
 
 /**
  *
  * @author User
  */
-public class orderList {
+public class SalesOrder {
     public String id;
     public String desc;
     public String date;
@@ -17,7 +17,7 @@ public class orderList {
     public int quantity;
     public double price;
     
-    public orderList(String id,String desc,String date, String time,int quantity, double price){
+    public SalesOrder(String id,String desc,String date, String time,int quantity, double price){
         this.id = id;
         this.desc = desc;
         this.date = date;
