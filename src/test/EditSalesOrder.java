@@ -7,7 +7,6 @@ package test;
 
 import adt.LList;
 import adt.ListInterface;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import entity.SalesOrder;
@@ -24,7 +23,7 @@ public class EditSalesOrder extends javax.swing.JFrame {
      */
     public EditSalesOrder() {
         initComponents();
-        StoreTable();
+        //StoreTable();
     }
 
     public EditSalesOrder(ListInterface<SalesOrder> list){
@@ -39,12 +38,12 @@ public class EditSalesOrder extends javax.swing.JFrame {
         }
     }*/
 
-public ListInterface OrderList(){
-    //ListInterface<SalesOrder> list = new LList<>();
-    SalesOrder ol = new SalesOrder(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText()));
-    list.add(ol);
-    return list;
-}
+//public ListInterface OrderList(){
+//    //ListInterface<SalesOrder> list = new LList<>();
+//    SalesOrder ol = new SalesOrder(jtfID.getText(), jtaDesc.getText(), jtfDate.getText(), jtfTime.getText(), Integer.parseInt(jtfQuan.getText()), Double.parseDouble(jtfPrice.getText()));
+//    list.add(ol);
+//    return list;
+//}
 public void StoreTable(){
        DefaultTableModel model = (DefaultTableModel) jtbProduct.getModel();
        //ListInterface<SalesOrder> list = new LList<>();
@@ -387,6 +386,14 @@ public void StoreTable(){
         jtfTime.setText(model.getValueAt(selectedRow, 3).toString());
         jtfQuan.setText(model.getValueAt(selectedRow, 4).toString());
         jtfPrice.setText(model.getValueAt(selectedRow, 5).toString());
+//        for(int i=0; i<list.getNumberOfEntries(); i++){
+//            jtfID.setText(list.getEntry(i+1).getId());
+//            jtaDesc.setText(list.getEntry(i+1).getDesc());
+//            jtfDate.setText(list.getEntry(i+1).getDate());
+//            jtfTime.setText(list.getEntry(i+1).getTime());
+//            jtfQuan.setText(Integer.toString(list.getEntry(i+1).getQuantity()));
+//            jtfPrice.setText(Double.toString(list.getEntry(i+1).getPrice()));
+//        }
         
         jtfID.setEditable(true);
         jtaDesc.setEditable(true);
