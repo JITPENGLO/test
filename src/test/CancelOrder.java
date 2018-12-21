@@ -25,44 +25,21 @@ public class CancelOrder extends javax.swing.JFrame {
         initComponents();
         addRowToTable();
     }
-
-//    public class Order{
-//        public String id;
-//        public String name;
-//        public String desc;
-//        public double price;
-//        public String orderType;
-//        public String flowerType;
-//    
-//        public Order(String id, String name, String desc, double price, String orderType, String flowerType){
-//            this.id = id;
-//            this.name = name;
-//            this.desc = desc;
-//            this.price = price;
-//            this.orderType = orderType;
-//            this.flowerType = flowerType;
-//        }
+    
+//    public ListInterface OrderList(){
+//        list.add(new Order("FR0000", "Orchid", "Very beautiful flower", 6.05, "Delivery", "bouquet"));
+//        list.add(new Order("FA0001", "Rose", "very romantic", 30.25, "Pickup", "floral arrangement"));
+//        list.add(new Order("FB0002", "Lily", "Very special flower", 10.95, "Delivery", "fresh flowers"));
+//        list.add(new Order("FK0003", "Sunflower", "Very ...", 5.55, "Pickup ", "bouquet"));
+//        return list;
 //    }
     
-    public ListInterface OrderList(){
-        //ListInterface<Order> list = new LList<>();
-        Order o1 = new Order("FR0000", "Orchid", "Very beautiful flower", 6.05, "Delivery", "bouquet");
-        Order o2 = new Order("FA0001", "Rose", "very romantic", 30.25, "Pickup", "floral arrangement");
-        Order o3 = new Order("FB0002", "Lily", "Very special flower", 10.95, "Delivery", "fresh flowers");
-        Order o4 = new Order("FK0003", "Sunflower", "Very ...", 5.55, "Pickup ", "bouquet");
-        //Order o5 = new Order("FB0004", "Dongzhuo", "Sad", 8.65, "set", "flower.jpg");
-        //Order o6 = new Order("FA0005", "JackBoon", "Nothing gonna change my love for u", 99.99, "alacart", "flower.jpg");
-        
-        list.add(o1);
-        list.add(o2); 
-        list.add(o3);
-        list.add(o4);
-        //order.add(o5);
-        //order.add(o6);
-        return list;
-    }
-    
     public void addRowToTable(){
+        list.add(new Order("FR0000", "Orchid", "Very beautiful flower", 6.05, "Delivery", "bouquet"));
+        list.add(new Order("FA0001", "Rose", "very romantic", 30.25, "Pickup", "floral arrangement"));
+        list.add(new Order("FB0002", "Lily", "Very special flower", 10.95, "Delivery", "fresh flowers"));
+        list.add(new Order("FK0003", "Sunflower", "Very ...", 5.55, "Pickup ", "bouquet"));
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         
         Object rowData[] = new Object[6];
@@ -234,22 +211,17 @@ public class CancelOrder extends javax.swing.JFrame {
 
     private void jbtDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtDeleteActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        //DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         //ListInterface<Order> list = OrderList();
         
         int yes = JOptionPane.showConfirmDialog(null, "Do you want to delete the order?", "TENRYU", JOptionPane.YES_NO_OPTION);
         if(yes == JOptionPane.YES_OPTION){
             for(int i=0; i<list.getNumberOfEntries(); i++){
                 if(jtfID.getText().equals(list.getEntry(i+1).getId())){
-                    model.removeRow(selectedIndex());
-                    //JOptionPane.showMessageDialog(null, "Invalid ID", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    //break;
+                    //model.removeRow(selectedIndex());
+                    list.remove(i+1);
+                    RefreshTable();
                 }
-                /*else{
-                    JOptionPane.showMessageDialog(null, "Invalid ID", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    break;
-                    //model.removeRow(i);
-                }*/
                 
             }
         }
@@ -258,6 +230,24 @@ public class CancelOrder extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbtDeleteActionPerformed
 
+    public void RefreshTable(){
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int countRow = model.getRowCount();
+        for(int j= countRow-1; j>=0; j--){
+            model.removeRow(j);
+        }
+        
+        for(int i=0; i<list.getNumberOfEntries(); i++){
+            model.addRow(new Object[]{
+                list.getEntry(i+1).getId(),
+                list.getEntry(i+1).getName(),
+                list.getEntry(i+1).getDesc(),
+                list.getEntry(i+1).getPrice(),
+                list.getEntry(i+1).getOrderType(),
+                list.getEntry(i+1).getFlowerType()});
+            }
+    }
+    
     public int selectedIndex(){
         //ListInterface<Order> order = new LList<>();
         int index = -1;
