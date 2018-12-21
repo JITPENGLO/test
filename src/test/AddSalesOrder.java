@@ -373,19 +373,7 @@ public void StoreTable(){
         
     }//GEN-LAST:event_jbtDeleteActionPerformed
 
-    private void jbteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbteditActionPerformed
-        // TODO add your handling code here:
-        // editOrder();
-        DefaultTableModel model = (DefaultTableModel)jtbProduct.getModel();
-        //ListInterface<SalesOrder> list = new LList();
-        
-        for(int i = 0;i < model.getRowCount();i++){
-            SalesOrder oList = new SalesOrder(model.getValueAt(i, 0).toString(),model.getValueAt(i,1).toString(),model.getValueAt(i, 2).toString(),
-                    model.getValueAt(i, 3).toString(),Integer.parseInt(model.getValueAt(i, 4).toString()),Double.parseDouble(model.getValueAt(i, 5).toString()));
-            
-            list.add(oList);
-        }
-        
+    private void jbteditActionPerformed(java.awt.event.ActionEvent evt) {
         new EditSalesOrder(list).setVisible(true);
     }
     /**
