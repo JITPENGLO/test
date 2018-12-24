@@ -5,7 +5,6 @@
  */
 package test;
 
-import javax.swing.table.DefaultTableModel;
 import adt.*;
 import entity.*;
 
@@ -13,8 +12,8 @@ import entity.*;
  *
  * @author User
  */
-public class CancelOrder extends javax.swing.JFrame {
-
+public class AddOrder extends javax.swing.JFrame {
+    
     customerInt<CorporateCustomer> corCust = new LinkedCustomer();
     customerInt<Customer> cust = new LinkedCustomer();
     staffInt<Staff> staffList = new LinkedStaff();
@@ -26,15 +25,11 @@ public class CancelOrder extends javax.swing.JFrame {
     
     Customer currentCust = new Customer();
     
-    /**
-     * Creates new form CancelOrder
-     */
-    public CancelOrder() {
+    public AddOrder() {
         initComponents();
-        StoreData();
     }
 
-    public CancelOrder(Customer currentCust,
+    public AddOrder(Customer currentCust,
                     customerInt<Customer> cust,
                     customerInt<CorporateCustomer> corCust,
                     staffInt<Staff> staffList,
@@ -53,12 +48,6 @@ public class CancelOrder extends javax.swing.JFrame {
         this.pickUpList = pickUpList;
         this.salesOrderList = salesOrderList;
         initComponents();
-    }
-    
-    public void StoreData(){
-       productList.addProd(new Product("P001","Rose","Fresh Flowers","Collect on current day morning 100% pure and fresh",50.0,5));
-       productList.addProd(new Product("P002","Sun Flowers","Fresh Flowers","Collect on current day morning 100% pure and fresh",10.0,2));
-       productList.addProd(new Product("P003","Moon Flowers","Fresh Flowers","Collect on current day morning 100% pure and fresh",10.0,2));
     }
     
     /**
@@ -81,23 +70,21 @@ public class CancelOrder extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 871, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 102, Short.MAX_VALUE)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jbtPickUp.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jbtPickUp.setText("Cancel PickUp");
+        jbtPickUp.setText("Add Pick Up");
         jbtPickUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtPickUpActionPerformed(evt);
             }
         });
 
-        jbtDelivery.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jbtDelivery.setText("Cancel Delivery");
+        jbtDelivery.setText("Add Delivery");
         jbtDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtDeliveryActionPerformed(evt);
@@ -108,21 +95,19 @@ public class CancelOrder extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jbtDelivery, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 871, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(304, 304, 304)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jbtDelivery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtPickUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jbtPickUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jbtPickUp)
-                .addGap(154, 154, 154)
-                .addComponent(jbtDelivery)
-                .addContainerGap(207, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jbtDelivery, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(113, 113, 113)
+                .addComponent(jbtPickUp, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(119, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -143,17 +128,17 @@ public class CancelOrder extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbtPickUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtPickUpActionPerformed
-        // TODO add your handling code here:
-        new PickUpHistory(currentCust, cust, corCust, staffList, productList, promoList,orderList,pickUpList,salesOrderList).setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_jbtPickUpActionPerformed
-
     private void jbtDeliveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtDeliveryActionPerformed
         // TODO add your handling code here:
-        new DeliveryHistory(currentCust, cust, corCust, staffList, productList, promoList,orderList,pickUpList,salesOrderList).setVisible(true);
+        new DeliveryOrder(currentCust,cust, corCust, staffList, productList, promoList,orderList,pickUpList,salesOrderList).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jbtDeliveryActionPerformed
+
+    private void jbtPickUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtPickUpActionPerformed
+         // TODO add your handling code here:
+         new PickUpOrder(currentCust,cust, corCust, staffList, productList, promoList,orderList,pickUpList,salesOrderList).setVisible(true);
+         this.setVisible(false);
+    }//GEN-LAST:event_jbtPickUpActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,20 +157,23 @@ public class CancelOrder extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CancelOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CancelOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CancelOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CancelOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CancelOrder().setVisible(true);
+                new AddOrder().setVisible(true);
             }
         });
     }

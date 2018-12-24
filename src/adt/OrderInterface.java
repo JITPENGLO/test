@@ -1,0 +1,1 @@
+package adt;public interface OrderInterface<T> {  public boolean add(T newEntry);    public T remove(int givenPosition);  public T getEntry(int givenPosition);  public int getNumberOfEntries();  public boolean isEmpty();}

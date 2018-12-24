@@ -5,6 +5,9 @@
  */
 package entity;
 
+import java.sql.Time;
+import java.util.Date;
+
 /**
  *
  * @author User
@@ -12,18 +15,38 @@ package entity;
 public class SalesOrder {
     public String id;
     public String desc;
+    public String status;
     public String date;
     public String time;
     public int quantity;
     public double price;
+    public CorporateCustomer corCust;
     
-    public SalesOrder(String id,String desc,String date, String time,int quantity, double price){
+    public SalesOrder(String id, String desc, String date, String time,int quantity, double price, String status,CorporateCustomer corCust){
         this.id = id;
         this.desc = desc;
         this.date = date;
         this.time = time;
         this.quantity = quantity;
         this.price = price;
+        this.status = status;
+        this.corCust = corCust;
+    }
+
+    public CorporateCustomer getCorCust() {
+        return corCust;
+    }
+
+    public void setCorCust(CorporateCustomer corCust) {
+        this.corCust = corCust;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public String getId() {

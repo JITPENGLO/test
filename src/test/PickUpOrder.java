@@ -5,48 +5,121 @@
  */
 package test;
 
-import adt.LList;
-import adt.ListInterface;
-import entity.Order;
-import entity.POrder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import adt.*;
+import entity.*;
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author jitpe
  */
-public class PickUp extends javax.swing.JFrame {
-    private ListInterface<Order> list = new LList<>();
-    private ListInterface<POrder> list1 = new LList<>();
+public class PickUpOrder extends javax.swing.JFrame {
     
+    customerInt<CorporateCustomer> corCust = new LinkedCustomer();
+    customerInt<Customer> cust = new LinkedCustomer();
+    staffInt<Staff> staffList = new LinkedStaff();
+    ProductListInterface<Product> productList = new ProductLList<>();
+    PromoListInterface<Promotion> promoList = new PromoLList<>();
+    OrderInterface<Delivery> orderList = new OrderLList<>();
+    OrderInterface<PickUp> pickUpList = new OrderLList<>();
+    OrderInterface<SalesOrder> salesOrderList = new OrderLList<>();
+    
+    Customer currentCust = new Customer();
+    Product product = new Product();
     /**
      * Creates new form AddOrder
      */
-    public PickUp() {
+    public PickUpOrder() {
         initComponents();
-        //addRowToTable();
+        addRowToTable();
+        retrieveProdID();
+        incrementID();
     }
     
-//    public void addRowToTable(){
-//        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-//        
-//        Object rowData[] = new Object[6];
-//        
-//        for(int i=0; i<list.getNumberOfEntries(); i++){
-//            rowData[0] = list.getEntry(i+1).getId();
-//            rowData[1] = list.getEntry(i+1).getName();
-//            rowData[2] = list.getEntry(i+1).getDesc();
-//            rowData[3] = list.getEntry(i+1).getPrice();
-//            rowData[4] = list.getEntry(i+1).getOrderType();
-//            rowData[5] = list.getEntry(i+1).getFlowerType();
-//            
-//            model.addRow(rowData);
-//        }
-//    }
+    public PickUpOrder(Customer currentCust,
+                       customerInt<Customer> cust,
+                       customerInt<CorporateCustomer> corCust,
+                       staffInt<Staff> staffList,
+                       ProductListInterface<Product> productList,
+                       PromoListInterface<Promotion> promoList,
+                       OrderInterface<Delivery> orderList,
+                       OrderInterface<PickUp> pickUpList,
+                       OrderInterface<SalesOrder> salesOrderList){
+        this.currentCust = currentCust;
+        this.cust = cust;
+        this.corCust = corCust;
+        this.staffList = staffList;
+        this.productList = productList;
+        this.promoList = promoList;
+        this.orderList = orderList;
+        this.pickUpList = pickUpList;
+        this.salesOrderList = salesOrderList;
+        initComponents();
+        addRowToTable();
+        retrieveProdID();
+        incrementID();
+    }
+    
+    
+    public void addRowToTable(){
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        
+        Object rowData[] = new Object[5];
+        
+        for(int i=0; i<productList.getNumberOfEntries(); i++){
+            rowData[0] = productList.getEntry(i+1).getId();
+            rowData[1] = productList.getEntry(i+1).getName();
+            rowData[2] = productList.getEntry(i+1).getProductDesc();
+            rowData[3] = productList.getEntry(i+1).getPrice();
+            rowData[4] = productList.getEntry(i+1).getQuantity();
+            
+            model.addRow(rowData);
+        }
+    }
+    
+    private void clearText(){
+        //jtfID.setText("");
+        jcbProdID.setSelectedIndex(0);
+        jtfQuantity.setText("");
+        jtfTotal.setText("");
+        jtfDate.setText("");
+        jtfTime.setText("");
+        //jtfID.requestFocus();
+    }
+    
+    public void retrieveProdID(){
+       
+        for(int i = 0; i < productList.getNumberOfEntries(); i++){
+            String prod = productList.getEntry(i + 1).getId();
+            jcbProdID.addItem("" + (prod));
+        }
+        
+    }
+    
+    private void incrementID(){
+        jtfID.setText("DO" + String.format("%04d",pickUpList.getNumberOfEntries()+1));
+    }
+    
+    private boolean checkEmpty(){
+        String msg = "";
+        if(jtfQuantity.getText().equals("")){
+            msg += "\nQuantity";
+        }
+        if(jtfDate.getText().equals("")){
+            msg += "\n Pick Up Date";
+        }
+        if(jtfTime.getText().equals("")){
+            msg += "\nPick Up TIme";
+        }
+        
+        if(!msg.equals("")){
+            JOptionPane.showMessageDialog(null, "The fill in the following text field!"+ msg, "Please fill in the form completely", JOptionPane.WARNING_MESSAGE);
+            return true;
+        }
+        
+        return false;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,6 +132,7 @@ public class PickUp extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -76,10 +150,7 @@ public class PickUp extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        jtfName = new javax.swing.JTextField();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        jcbProdID = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,20 +160,33 @@ public class PickUp extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Fiore Flowershop");
 
+        jButton2.setText("Back");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -113,14 +197,14 @@ public class PickUp extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Name", "Description", "Price(RM)", "Quantity"
+                "ID", "Name", "Description", "Product Type", "Price(RM)", "Quantity"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -138,7 +222,7 @@ public class PickUp extends javax.swing.JFrame {
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel3.setText(" ID                     :");
+        jLabel3.setText(" Order ID             :");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText(" Quantity             :");
@@ -146,6 +230,7 @@ public class PickUp extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText(" Pick up Date        :");
 
+        jtfID.setEditable(false);
         jtfID.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jtfID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,6 +239,11 @@ public class PickUp extends javax.swing.JFrame {
         });
 
         jtfQuantity.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jtfQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfQuantityActionPerformed(evt);
+            }
+        });
 
         jtfDate.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
@@ -178,6 +268,7 @@ public class PickUp extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText(" Pick up Time        :");
 
+        jtfTotal.setEditable(false);
         jtfTotal.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jtfTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,9 +288,9 @@ public class PickUp extends javax.swing.JFrame {
         });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setText(" Product Name      :");
+        jLabel7.setText(" Product ID          :");
 
-        jtfName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jcbProdID.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -226,7 +317,7 @@ public class PickUp extends javax.swing.JFrame {
                                 .addComponent(jbtConfirm)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jtfCancel))
-                            .addComponent(jtfName)))
+                            .addComponent(jcbProdID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
@@ -246,15 +337,15 @@ public class PickUp extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtfID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jcbProdID))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jtfQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -266,9 +357,7 @@ public class PickUp extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(13, 13, 13))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jtfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jtfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(3, 3, 3)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -276,8 +365,7 @@ public class PickUp extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jtfTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jtfTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -286,47 +374,18 @@ public class PickUp extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jRadioButton1.setLabel("Bouquet");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
-            }
-        });
-
-        jRadioButton2.setText("Fresh Flower");
-
-        jRadioButton3.setLabel("Floral Arrangement");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jRadioButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jRadioButton2)
-                .addGap(78, 78, 78)
-                .addComponent(jRadioButton3)
-                .addGap(140, 140, 140))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton3))
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
@@ -340,8 +399,10 @@ public class PickUp extends javax.swing.JFrame {
 
     private void jbtConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtConfirmActionPerformed
         // TODO add your handling code here:
+        new CustomerHomepage(currentCust,cust, corCust, staffList, productList, promoList,orderList,pickUpList,salesOrderList).setVisible(true);
+        this.setVisible(false);
         
-        
+        //new .setVisible(true);
 //        if(jtfID.getText().equals("") && jtfQuantity.getText().equals("") && jtfDate.getText().equals("") && jtfTime.getText().equals("")){
 //            JOptionPane.showMessageDialog(null, "The below messages cannot be empty!\n - ID\n - Quantity\n - Date\n - Time", "ERROR!", JOptionPane.ERROR_MESSAGE);
 //        }
@@ -385,22 +446,8 @@ public class PickUp extends javax.swing.JFrame {
 
     private void jtfCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfCancelActionPerformed
         // TODO add your handling code here:
-        jtfID.setText("");
-        jtfName.setText("");
-        jtfQuantity.setText("");
-        jtfDate.setText("");
-        jtfTime.setText("");
-        jtfTotal.setText("");
-        jtfID.requestFocus();
+        clearText();
     }//GEN-LAST:event_jtfCancelActionPerformed
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
-
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jtfTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfTotalActionPerformed
         // TODO add your handling code here:
@@ -408,21 +455,46 @@ public class PickUp extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        int yesno = JOptionPane.showConfirmDialog(null, "Do you want to add the order?", "ARE YOU SURE???", JOptionPane.YES_NO_OPTION);
-        if(yesno == JOptionPane.YES_OPTION){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            
-            Order newOrder = new Order(jtfID.getText(), jtfName.getText(), Integer.parseInt(jtfQuantity.getText()), Double.parseDouble(jtfTotal.getText()));
-            POrder newOrder1 = new POrder(sdf.parse(jtfDate.getText()), jtfTime.getText());
-            list.add(newOrder);
-            list1.add(newOrder1);
-            
-            for(int i=0; i<list.getNumberOfEntries(); i++){
-                String s = "\nOrder ID: "+ list.getEntry(i+1).getId()+ "\nProduct Name: "+ list.getEntry(i+1).getProdName()+ "\nQuantity: "+ list.getEntry(i+1).getQuant()+ "\nTotal Price(RM): "+ list.getEntry(i+1).getPrice()+ "\n";
-                JOptionPane.showMessageDialog(null, s, "HELLO WORLD!", JOptionPane.INFORMATION_MESSAGE);
+        if(!checkEmpty()){
+            int yesno = JOptionPane.showConfirmDialog(null, "Do you want to add the order?", "ARE YOU SURE???", JOptionPane.YES_NO_OPTION);
+            if(yesno == JOptionPane.YES_OPTION){
+                PickUp newOrder = new PickUp(jtfID.getText(), product, Integer.parseInt(jtfQuantity.getText()), Double.parseDouble(jtfTotal.getText()), currentCust, "Unpaid",jtfDate.getText(), jtfTime.getText());
+                product.setId(jcbProdID.getSelectedItem().toString());
+                pickUpList.add(newOrder);
+                incrementID();
+            } 
+        }  
+            for(int i=0; i<pickUpList.getNumberOfEntries(); i++){
+                String s = "\nOrder ID: "+ pickUpList.getEntry(i+1).getOrderID()+ "\nProduct ID: "+ pickUpList.getEntry(i+1).getProduct().getId() + "\nQuantity: "+ pickUpList.getEntry(i+1).getQuantity()+ "\nTotal Price(RM): "+ pickUpList.getEntry(i+1).getTotalPrice()+ "\nPickUp Date: "+ pickUpList.getEntry(i+1).getDate()+ "\nPickUp Time: "+ pickUpList.getEntry(i+1).getTime()+ "\n";
+                JOptionPane.showMessageDialog(null, s, "Add Successful!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            }
+        clearText();
+        //new PickUpHistory(list).setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        new CustomerHomepage(currentCust,cust, corCust, staffList, productList, promoList,orderList,pickUpList,salesOrderList).setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jtfQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfQuantityActionPerformed
+        // TODO add your handling code here:
+        for(int i=0; i<productList.getNumberOfEntries(); i++){
+            String selectedProdID = jcbProdID.getSelectedItem().toString();
+            if(selectedProdID.equals(productList.getEntry(i+1).getId())){
+                double price = productList.getEntry(i+1).getPrice();
+                double needQty = Double.parseDouble(jtfQuantity.getText());
+                if(needQty >= 0 && needQty <= productList.getEntry(i+1).getQuantity()){
+                    double total = price * needQty;
+                    jtfTotal.setText("" + total);
+                }else{
+                    JOptionPane.showMessageDialog(this,"The quantity you need is exceed the available quantity","Exceed Quantty", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jtfQuantityActionPerformed
 
     /**
      * @param args the command line arguments
@@ -457,13 +529,14 @@ public class PickUp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PickUp().setVisible(true);
+                new PickUpOrder().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -473,16 +546,13 @@ public class PickUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton jbtConfirm;
+    private javax.swing.JComboBox<String> jcbProdID;
     private javax.swing.JButton jtfCancel;
     private javax.swing.JTextField jtfDate;
     private javax.swing.JTextField jtfID;
-    private javax.swing.JTextField jtfName;
     private javax.swing.JTextField jtfQuantity;
     private javax.swing.JTextField jtfTime;
     private javax.swing.JTextField jtfTotal;
